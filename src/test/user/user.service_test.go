@@ -127,10 +127,10 @@ func (t *UserServiceTest) TestFindAllUser() {
 		StatusCode: http.StatusOK,
 	}
 
-	var perms []*model.User
+	var users []*model.User
 
 	paginationIn := &model.UserPagination{
-		Items: &perms,
+		Items: &users,
 		Meta: model.PaginationMetadata{
 			ItemsPerPage: 10,
 			CurrentPage:  1,
