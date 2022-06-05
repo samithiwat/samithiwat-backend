@@ -8,6 +8,7 @@ type Team struct {
 	Description    string  `json:"description"`
 	ParentID       *uint   `json:"parent_id"`
 	SubTeams       []*Team `json:"sub_team" gorm:"foreignkey:ParentID"`
+	Members        []*User `json:"users" gorm:"many2many:user_team;"`
 	OrganizationID *uint   `json:"organization_id"`
 }
 

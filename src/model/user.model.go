@@ -14,8 +14,8 @@ type User struct {
 	Organizations []*Organization `json:"organizations" gorm:"many2many:user_organization;"`
 	Teams         []*Team         `json:"teams" gorm:"many2many:user_team;"`
 	Roles         []*Role         `json:"roles" gorm:"many2many:user_role;"`
-	Location      Location        `json:"location"`
-	Contact       Contact         `json:"contact"`
+	Location      Location        `json:"location" gorm:"polymorphic:Owner;"`
+	Contact       Contact         `json:"contact" gorm:"polymorphic:Owner;"`
 }
 
 type UserPagination struct {
