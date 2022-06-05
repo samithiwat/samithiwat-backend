@@ -1,4 +1,4 @@
-package location
+package location_test
 
 import (
 	"github.com/bxcodec/faker/v3"
@@ -7,7 +7,7 @@ import (
 	"github.com/samithiwat/samithiwat-backend/src/proto"
 	"github.com/samithiwat/samithiwat-backend/src/service"
 	"github.com/samithiwat/samithiwat-backend/src/test"
-	"github.com/samithiwat/samithiwat-backend/src/test/mock"
+	"github.com/samithiwat/samithiwat-backend/src/test/location"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
@@ -118,15 +118,12 @@ func (t *LocationServiceTest) TestFindOneLocation() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	r.On("FindOne", 1, &model.Location{}).Return(t.Loc, nil)
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.FindOne(mock.Context{}, &proto.FindOneLocationRequest{Id: 1})
+	locRes, err := locService.FindOne(test.Context{}, &proto.FindOneLocationRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -141,15 +138,12 @@ func (t *LocationServiceTest) TestFindOneErrNotFoundLocation() {
 		StatusCode: http.StatusNotFound,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	r.On("FindOne", 1, &model.Location{}).Return(nil, errors.New("Not found location"))
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.FindOne(mock.Context{}, &proto.FindOneLocationRequest{Id: 1})
+	locRes, err := locService.FindOne(test.Context{}, &proto.FindOneLocationRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -168,17 +162,14 @@ func (t *LocationServiceTest) TestFindMultiLocation() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	var locs []*model.Location
 
 	r.On("FindMulti", []uint32{1, 2, 3, 4, 5}, &locs).Return(t.Locs, nil)
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.FindMulti(mock.Context{}, &proto.FindMultiLocationRequest{Ids: []uint32{1, 2, 3, 4, 5}})
+	locRes, err := locService.FindMulti(test.Context{}, &proto.FindMultiLocationRequest{Ids: []uint32{1, 2, 3, 4, 5}})
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -192,10 +183,7 @@ func (t *LocationServiceTest) TestCreateLocation() {
 		StatusCode: http.StatusCreated,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	locIn := &model.Location{
 		Address:  t.Loc.Address,
@@ -208,7 +196,7 @@ func (t *LocationServiceTest) TestCreateLocation() {
 	r.On("Create", locIn).Return(t.Loc, nil)
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.Create(mock.Context{}, t.CreateLocationReqMock)
+	locRes, err := locService.Create(test.Context{}, t.CreateLocationReqMock)
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -222,15 +210,12 @@ func (t *LocationServiceTest) TestUpdateLocation() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	r.On("Update", 1, t.Loc).Return(t.Loc, nil)
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.Update(mock.Context{}, t.UpdateLocationReqMock)
+	locRes, err := locService.Update(test.Context{}, t.UpdateLocationReqMock)
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -245,15 +230,12 @@ func (t *LocationServiceTest) TestUpdateErrNotFoundLocation() {
 		StatusCode: http.StatusNotFound,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	r.On("Update", 1, t.Loc).Return(nil, errors.New("Not found location"))
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.Update(mock.Context{}, t.UpdateLocationReqMock)
+	locRes, err := locService.Update(test.Context{}, t.UpdateLocationReqMock)
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -267,15 +249,12 @@ func (t *LocationServiceTest) TestDeleteLocation() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	r.On("Delete", 1, &model.Location{}).Return(t.Loc, nil)
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.Delete(mock.Context{}, &proto.DeleteLocationRequest{Id: 1})
+	locRes, err := locService.Delete(test.Context{}, &proto.DeleteLocationRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
@@ -290,15 +269,12 @@ func (t *LocationServiceTest) TestDeleteErrNotFoundLocation() {
 		StatusCode: http.StatusNotFound,
 	}
 
-	r := &mock.LocationMockRepo{
-		Loc:  t.Loc,
-		Locs: t.Locs,
-	}
+	r := &location.MockRepo{}
 
 	r.On("Delete", 1, &model.Location{}).Return(nil, errors.New("Not found location"))
 
 	locService := service.NewLocationService(r)
-	locRes, err := locService.Delete(mock.Context{}, &proto.DeleteLocationRequest{Id: 1})
+	locRes, err := locService.Delete(test.Context{}, &proto.DeleteLocationRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got any error")
 	assert.Equal(t.T(), want, locRes)
