@@ -93,3 +93,23 @@ func RawToDtoRole(role *model.Role) *proto.Role {
 		Permissions: permissions,
 	}
 }
+
+func RawToDtoUser(user *model.User) *proto.User {
+	return &proto.User{
+		Id:          uint32(user.ID),
+		Firstname:   user.Firstname,
+		Lastname:    user.Lastname,
+		DisplayName: user.DisplayName,
+		ImageUrl:    user.ImageUrl,
+	}
+}
+
+func DtoToRawUser(user *proto.User) *model.User {
+	return &model.User{
+		Model:       gorm.Model{ID: uint(user.Id)},
+		Firstname:   user.Firstname,
+		Lastname:    user.Lastname,
+		DisplayName: user.DisplayName,
+		ImageUrl:    user.ImageUrl,
+	}
+}
