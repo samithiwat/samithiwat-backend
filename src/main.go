@@ -7,6 +7,9 @@ import (
 	"github.com/samithiwat/samithiwat-backend/src/config"
 	"github.com/samithiwat/samithiwat-backend/src/database"
 	seed "github.com/samithiwat/samithiwat-backend/src/database/seeds"
+	"github.com/samithiwat/samithiwat-backend/src/proto"
+	"github.com/samithiwat/samithiwat-backend/src/repository"
+	"github.com/samithiwat/samithiwat-backend/src/service"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 	"log"
@@ -81,7 +84,16 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	locRepo := repository.NewLocationRepository(db)
+	locServ := service.NewLocationService(locRepo)
+
+	contRepo := repository.NewContactRepository(db)
+	contServ := service.NewContactService(contRepo)
+
 	grpcServer := grpc.NewServer()
+
+	proto.RegisterLocationServiceServer(grpcServer, locServ)
+	proto.RegisterContactServiceServer(grpcServer, contServ)
 
 	go func() {
 		fmt.Println(fmt.Sprintf("samithiwat backend starting at port %v", conf.App.Port))

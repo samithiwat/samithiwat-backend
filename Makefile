@@ -11,7 +11,9 @@ proto:
 
 test:
 	go vet ./...
-	go test ./... -coverprofile coverage.out -covermode count
+	go test  -v -coverpkg ./... -coverprofile coverage.out -covermode count ./...
+	go tool cover -func=coverage.out
+	go tool cover -html=coverage.out -o coverage.html
 
 server:
 	go run ./src/.
