@@ -1,0 +1,9 @@
+database:
+  host: localhost:3306
+  name: samithiwat
+  username: admin
+  password: password
+
+app:
+  port: 3002
+  debug: true
