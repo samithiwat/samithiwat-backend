@@ -48,3 +48,6 @@ config.yaml
 # Generated
 generated
 github.com
+
+# Coverage
+coverage.out
