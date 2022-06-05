@@ -2,8 +2,6 @@ package model
 
 import "gorm.io/gorm"
 
-// TODO: Change to use polymorph relationship
-
 type Contact struct {
 	gorm.Model
 	Facebook  string `json:"facebook"`
