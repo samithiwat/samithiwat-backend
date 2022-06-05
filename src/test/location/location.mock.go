@@ -1,17 +1,15 @@
-package mock
+package location
 
 import (
 	"github.com/samithiwat/samithiwat-backend/src/model"
 	"github.com/stretchr/testify/mock"
 )
 
-type LocationMockRepo struct {
+type MockRepo struct {
 	mock.Mock
-	Loc  *model.Location
-	Locs []*model.Location
 }
 
-func (r *LocationMockRepo) FindOne(id int, loc *model.Location) error {
+func (r *MockRepo) FindOne(id int, loc *model.Location) error {
 	args := r.Called(id, loc)
 	if args.Get(0) != nil {
 		*loc = *args.Get(0).(*model.Location)
@@ -20,7 +18,7 @@ func (r *LocationMockRepo) FindOne(id int, loc *model.Location) error {
 	return args.Error(1)
 }
 
-func (r *LocationMockRepo) FindMulti(ids []uint32, locs *[]*model.Location) error {
+func (r *MockRepo) FindMulti(ids []uint32, locs *[]*model.Location) error {
 	args := r.Called(ids, locs)
 	if args.Get(0) != nil {
 		*locs = args.Get(0).([]*model.Location)
@@ -29,7 +27,7 @@ func (r *LocationMockRepo) FindMulti(ids []uint32, locs *[]*model.Location) erro
 	return args.Error(1)
 }
 
-func (r *LocationMockRepo) Create(loc *model.Location) error {
+func (r *MockRepo) Create(loc *model.Location) error {
 	args := r.Called(loc)
 	if args.Get(0) != nil {
 		*loc = *args.Get(0).(*model.Location)
@@ -38,7 +36,7 @@ func (r *LocationMockRepo) Create(loc *model.Location) error {
 	return args.Error(1)
 }
 
-func (r *LocationMockRepo) Update(id int, loc *model.Location) error {
+func (r *MockRepo) Update(id int, loc *model.Location) error {
 	args := r.Called(id, loc)
 	if args.Get(0) != nil {
 		*loc = *args.Get(0).(*model.Location)
@@ -47,7 +45,7 @@ func (r *LocationMockRepo) Update(id int, loc *model.Location) error {
 	return args.Error(1)
 }
 
-func (r *LocationMockRepo) Delete(id int, loc *model.Location) error {
+func (r *MockRepo) Delete(id int, loc *model.Location) error {
 	args := r.Called(id, loc)
 	if args.Get(0) != nil {
 		*loc = *args.Get(0).(*model.Location)
