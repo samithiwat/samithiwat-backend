@@ -10,7 +10,8 @@ proto:
 	protoc --proto_path=src/proto --go_out=plugins=grpc:. permission.proto
 
 test:
-	go test ./src/test
+	go vet ./...
+	go test ./... -coverprofile coverage.out -covermode count
 
 server:
 	go run ./src/.
