@@ -1,4 +1,4 @@
-package contact
+package contact_test
 
 import (
 	"github.com/bxcodec/faker/v3"
@@ -7,7 +7,7 @@ import (
 	"github.com/samithiwat/samithiwat-backend/src/proto"
 	"github.com/samithiwat/samithiwat-backend/src/service"
 	"github.com/samithiwat/samithiwat-backend/src/test"
-	"github.com/samithiwat/samithiwat-backend/src/test/mock"
+	"github.com/samithiwat/samithiwat-backend/src/test/contact"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
@@ -112,15 +112,12 @@ func (t *ContactServiceTest) TestFindOneContact() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	r.On("FindOne", 1, &model.Contact{}).Return(t.Cont, nil)
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.FindOne(mock.Context{}, &proto.FindOneContactRequest{Id: 1})
+	contRes, err := contService.FindOne(test.Context{}, &proto.FindOneContactRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -135,15 +132,12 @@ func (t *ContactServiceTest) TestFindOneErrNotFoundContact() {
 		StatusCode: http.StatusNotFound,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	r.On("FindOne", 1, &model.Contact{}).Return(nil, errors.New("Not found contact"))
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.FindOne(mock.Context{}, &proto.FindOneContactRequest{Id: 1})
+	contRes, err := contService.FindOne(test.Context{}, &proto.FindOneContactRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -163,17 +157,14 @@ func (t *ContactServiceTest) TestFindMultiContact() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	var conts []*model.Contact
 
 	r.On("FindMulti", []uint32{1, 2, 3, 4, 5}, &conts).Return(t.Conts, nil)
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.FindMulti(mock.Context{}, &proto.FindMultiContactRequest{Ids: []uint32{1, 2, 3, 4, 5}})
+	contRes, err := contService.FindMulti(test.Context{}, &proto.FindMultiContactRequest{Ids: []uint32{1, 2, 3, 4, 5}})
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -188,10 +179,7 @@ func (t *ContactServiceTest) TestCreateContact() {
 		StatusCode: http.StatusCreated,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	contIn := &model.Contact{
 		Facebook:  t.Cont.Facebook,
@@ -203,7 +191,7 @@ func (t *ContactServiceTest) TestCreateContact() {
 	r.On("Create", contIn).Return(t.Cont, nil)
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.Create(mock.Context{}, t.CreateContactReqMock)
+	contRes, err := contService.Create(test.Context{}, t.CreateContactReqMock)
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -218,15 +206,12 @@ func (t *ContactServiceTest) TestUpdateContact() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	r.On("Update", 1, t.Cont).Return(t.Cont, nil)
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.Update(mock.Context{}, t.UpdateContactReqMock)
+	contRes, err := contService.Update(test.Context{}, t.UpdateContactReqMock)
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -241,15 +226,12 @@ func (t *ContactServiceTest) TestUpdateErrNotFoundContact() {
 		StatusCode: http.StatusNotFound,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	r.On("Update", 1, t.Cont).Return(nil, errors.New("Not found contact"))
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.Update(mock.Context{}, t.UpdateContactReqMock)
+	contRes, err := contService.Update(test.Context{}, t.UpdateContactReqMock)
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -264,15 +246,12 @@ func (t *ContactServiceTest) TestDeleteContact() {
 		StatusCode: http.StatusOK,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	r.On("Delete", 1, &model.Contact{}).Return(t.Cont, nil)
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.Delete(mock.Context{}, &proto.DeleteContactRequest{Id: 1})
+	contRes, err := contService.Delete(test.Context{}, &proto.DeleteContactRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
@@ -287,15 +266,12 @@ func (t *ContactServiceTest) TestDeleteErrNotFoundContact() {
 		StatusCode: http.StatusNotFound,
 	}
 
-	r := &mock.ContactMockRepo{
-		Cont:  t.Cont,
-		Conts: t.Conts,
-	}
+	r := &contact.MockRepo{}
 
 	r.On("Delete", 1, &model.Contact{}).Return(nil, errors.New("Not found contact"))
 
 	contService := service.NewContactService(r)
-	contRes, err := contService.Delete(mock.Context{}, &proto.DeleteContactRequest{Id: 1})
+	contRes, err := contService.Delete(test.Context{}, &proto.DeleteContactRequest{Id: 1})
 
 	assert.Nil(t.T(), err, "Must not got error")
 	assert.Equal(t.T(), want, contRes)
