@@ -47,3 +47,13 @@ func RawToDtoRole(role *model.Role) *proto.Role {
 		Permissions: permissions,
 	}
 }
+
+func RawToDtoUser(user *model.User) *proto.User {
+	return &proto.User{
+		Id:          uint32(user.ID),
+		Firstname:   user.Firstname,
+		Lastname:    user.Lastname,
+		ImageUrl:    user.ImageUrl,
+		DisplayName: user.DisplayName,
+	}
+}
