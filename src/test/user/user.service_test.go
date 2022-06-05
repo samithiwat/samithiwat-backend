@@ -198,6 +198,33 @@ func (t *UserServiceTest) TestFindOneErrNotFoundUser() {
 	assert.Equal(t.T(), want, usrRes)
 }
 
+func (t *UserServiceTest) TestFindMultiUser() {
+	var result []*proto.User
+	for _, tm := range t.Users {
+		result = append(result, test.RawToDtoUser(tm))
+	}
+
+	var errs []string
+
+	want := &proto.UserListResponse{
+		Data:       result,
+		Errors:     errs,
+		StatusCode: http.StatusOK,
+	}
+
+	var teams []*model.User
+
+	r := &user.MockRepo{}
+
+	r.On("FindMulti", []uint32{1, 2, 3, 4, 5}, &teams).Return(t.Users, nil)
+
+	teamService := service.NewUserService(r)
+	teamRes, err := teamService.FindMulti(test.Context{}, &proto.FindMultiUserRequest{Ids: []uint32{1, 2, 3, 4, 5}})
+
+	assert.Nil(t.T(), err, "Must not got error")
+	assert.Equal(t.T(), want, teamRes)
+}
+
 func (t *UserServiceTest) TestCreateUser() {
 	var errs []string
 
