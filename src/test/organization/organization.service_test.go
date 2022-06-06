@@ -38,6 +38,7 @@ func (t *OrganizationServiceTest) SetupTest() {
 			DeletedAt: gorm.DeletedAt{},
 		},
 		Name:        faker.Word(),
+		Email:       faker.Email(),
 		Description: faker.Sentence(),
 	}
 
@@ -49,6 +50,7 @@ func (t *OrganizationServiceTest) SetupTest() {
 			DeletedAt: gorm.DeletedAt{},
 		},
 		Name:        faker.Word(),
+		Email:       faker.Email(),
 		Description: faker.Sentence(),
 	}
 
@@ -60,6 +62,7 @@ func (t *OrganizationServiceTest) SetupTest() {
 			DeletedAt: gorm.DeletedAt{},
 		},
 		Name:        faker.Word(),
+		Email:       faker.Email(),
 		Description: faker.Sentence(),
 	}
 
@@ -71,6 +74,7 @@ func (t *OrganizationServiceTest) SetupTest() {
 			DeletedAt: gorm.DeletedAt{},
 		},
 		Name:        faker.Word(),
+		Email:       faker.Email(),
 		Description: faker.Sentence(),
 	}
 
@@ -79,6 +83,7 @@ func (t *OrganizationServiceTest) SetupTest() {
 	t.CreateOrganizationReqMock = &proto.CreateOrganizationRequest{
 		Organization: &proto.Organization{
 			Name:        t.Organization.Name,
+			Email:       t.Organization.Email,
 			Description: t.Organization.Description,
 		},
 	}
@@ -87,6 +92,7 @@ func (t *OrganizationServiceTest) SetupTest() {
 		Organization: &proto.Organization{
 			Id:          uint32(t.Organization.ID),
 			Name:        t.Organization.Name,
+			Email:       t.Organization.Email,
 			Description: t.Organization.Description,
 		},
 	}
@@ -226,6 +232,7 @@ func (t *OrganizationServiceTest) TestCreateOrganization() {
 
 	orgIn := &model.Organization{
 		Name:        t.Organization.Name,
+		Email:       t.Organization.Email,
 		Description: t.Organization.Description,
 	}
 
