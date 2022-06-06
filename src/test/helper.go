@@ -109,6 +109,7 @@ func RawToDtoOrganization(org *model.Organization) *proto.Organization {
 	return &proto.Organization{
 		Id:          uint32(org.ID),
 		Name:        org.Name,
+		Email:       org.Email,
 		Description: org.Description,
 		Teams:       RawToDtoSubTeams(org.Teams),
 		Roles:       roles,

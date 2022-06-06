@@ -171,6 +171,7 @@ func RawToDtoOrganization(org *model.Organization) *proto.Organization {
 	return &proto.Organization{
 		Id:          uint32(org.ID),
 		Name:        org.Name,
+		Email:       org.Email,
 		Description: org.Description,
 		Teams:       RawToDtoSubTeams(org.Teams),
 		Roles:       roles,
@@ -215,6 +216,7 @@ func DtoToRawOrganization(org *proto.Organization) *model.Organization {
 	return &model.Organization{
 		Model:       gorm.Model{ID: uint(org.Id)},
 		Name:        org.Name,
+		Email:       org.Email,
 		Description: org.Description,
 		Teams:       DtoToRawSubTeams(org.Teams),
 		Roles:       roles,
