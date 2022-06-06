@@ -5,6 +5,7 @@ import "gorm.io/gorm"
 type Organization struct {
 	gorm.Model
 	Name        string   `json:"name" gorm:"index:,unique"`
+	Email       string   `json:"email"`
 	Description string   `json:"description"`
 	Teams       []*Team  `json:"teams"`
 	Members     []*User  `json:"users" gorm:"many2many:user_organization;"`
