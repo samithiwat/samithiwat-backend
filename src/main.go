@@ -7,6 +7,9 @@ import (
 	"github.com/samithiwat/samithiwat-backend/src/config"
 	"github.com/samithiwat/samithiwat-backend/src/database"
 	seed "github.com/samithiwat/samithiwat-backend/src/database/seeds"
+	"github.com/samithiwat/samithiwat-backend/src/proto"
+	"github.com/samithiwat/samithiwat-backend/src/repository"
+	"github.com/samithiwat/samithiwat-backend/src/service"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 	"log"
@@ -74,6 +77,11 @@ func main() {
 		log.Fatal("Cannot connect to database: ", err.Error())
 	}
 
+	cache, err := database.InitRedisConnect(&conf.Redis)
+	if err != nil {
+		log.Fatal("Cannot connect to redis: ", err.Error())
+	}
+
 	handleArgs(db)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%v", conf.App.Port))
@@ -81,7 +89,36 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	locRepo := repository.NewLocationRepository(db)
+	locServ := service.NewLocationService(locRepo)
+
+	contRepo := repository.NewContactRepository(db)
+	contServ := service.NewContactService(contRepo)
+
+	tmRepo := repository.NewTeamRepository(db)
+	tmSrv := service.NewTeamService(tmRepo)
+
+	orgRepo := repository.NewOrganizationRepository(db)
+	orgSrv := service.NewOrganizationService(orgRepo)
+
+	roleRepo := repository.NewRoleRepository(db)
+	roleSrv := service.NewRoleService(roleRepo)
+
+	permRepo := repository.NewPermissionRepository(db)
+	permSrv := service.NewPermissionService(permRepo)
+
+	userRepo := repository.NewUserRepository(db, cache)
+	userSrv := service.NewUserService(userRepo)
+
 	grpcServer := grpc.NewServer()
+
+	proto.RegisterLocationServiceServer(grpcServer, locServ)
+	proto.RegisterContactServiceServer(grpcServer, contServ)
+	proto.RegisterTeamServiceServer(grpcServer, tmSrv)
+	proto.RegisterOrganizationServiceServer(grpcServer, orgSrv)
+	proto.RegisterRoleServiceServer(grpcServer, roleSrv)
+	proto.RegisterPermissionServiceServer(grpcServer, permSrv)
+	proto.RegisterUserServiceServer(grpcServer, userSrv)
 
 	go func() {
 		fmt.Println(fmt.Sprintf("samithiwat backend starting at port %v", conf.App.Port))
