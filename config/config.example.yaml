@@ -4,6 +4,9 @@ database:
   username: admin
   password: password
 
+redis:
+  host: localhost:6379
+
 app:
   port: 3002
   debug: true
